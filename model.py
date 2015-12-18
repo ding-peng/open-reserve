@@ -41,6 +41,10 @@ def GetResource(id):
     return Resource.get_by_id(id)
 
 
+def GetReservation(id, parent):
+    return Reservation.get_by_id(id, parent=parent.key)
+
+
 def AllReservations(user):
     # TODO: time has passed
     return Reservation.query(Reservation.reserver==user).order(Reservation.reserve_time)
@@ -88,8 +92,8 @@ def AddTag(name):
         return Tag.query(Tag.tag_name==name).get()
 
 
-def DelReservation(id):
-    key = ndb.Key(Reservation, id)
+def DelReservation(id, parent):
+    key = ndb.Key(Reservation, id, parent=parent.key)
     key.delete()
 
 

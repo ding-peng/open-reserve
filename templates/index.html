@@ -20,7 +20,7 @@
 			<td>{{ res.key.parent().get().name }}</td>
 			<td>{{ res.start }} - {{ res.end }}</td>
 			<td>
-            	<a href="/reservation/{{ res.id }}/del" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
+            	<a href="/user/del/{{ res.key.parent().get().key.id() }}/{{ res.key.id() }}" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
         	</td>
 		</tr>
 		{% endfor %}
@@ -50,7 +50,7 @@
 <div class="list-group">
 	<h4>My Resources</h4>
 	{% for res in my_resources %}
-		<a href="#" class="list-group-item">{{ res.name }}</a>
+		<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
 	{% endfor %}
 </div>
   </div>

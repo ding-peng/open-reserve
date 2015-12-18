@@ -8,7 +8,9 @@ handlers:
 - url: /static
   static_dir: templates/static
 - url: /resource/.*
-  script: resource.app 
+  script: resource.app
+- url: /user/.*
+  script: user.app
 - url: /.*
   script: main.app
 
