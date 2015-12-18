@@ -96,11 +96,11 @@
   		</div>
   		<div class="form-group">
     		<label for="start">Start Time</label>
-    		<input class="form-control" id="start" name="start" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.start_time }}" required>
+    		<input class="form-control" id="start" name="start" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.start_time.strftime("%H:%M") }}" required>
   		</div>
   		<div class="form-group">
     		<label for="end">End &nbsp;&nbsp;Time</label>
-    		<input class="form-control" id="end" name="end" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.end_time}}" required>
+    		<input class="form-control" id="end" name="end" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.end_time.strftime("%H:%M") }}" required>
     	</div>
     	<div class="form-group">
     		<label for="capacity">Capacity&nbsp;&nbsp;&nbsp;</label>
@@ -108,7 +108,7 @@
     	</div>
     	<div class="form-group">
     		<label for="tags">Tags (Seperate by space)</label>
-    		<input class="form-control" id="tags" name="tags" value="{{ resoource.tags }}">
+    		<input class="form-control" id="tags" name="tags" value="{{ tag(resource.tags).strip().replace("\t","") }}">
     	</div>
     	<div class="form-group">
     		<label for="des">Descriptions</label>
@@ -126,3 +126,9 @@
 </div>
 
 {% endblock %}
+
+{% macro tag(tags) %}
+	{% for t in tags %}
+		{{ t.tag_name+" " }}
+	{% endfor %}
+{% endmacro %}
