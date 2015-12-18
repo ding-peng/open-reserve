@@ -7,9 +7,9 @@ threadsafe: true
 handlers:
 - url: /static
   static_dir: templates/static
-- url: /resource
+- url: /resource/.*
   script: resource.app 
-- url: /
+- url: /.*
   script: main.app
 
 libraries:

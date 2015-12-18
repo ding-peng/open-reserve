@@ -16,8 +16,8 @@
 	<tbody>
 		{% for res in reservations %}
 		<tr>
-			<td>{{ res.resource.name }}</td>
 			<td>{{ res.reserve_time }}</td>
+			<td>{{ res.resource.name }}</td>
 			<td>{{ res.start }} - {{ res.end }}</td>
 			<td>
             	<a href="/reservation/{{ res.id }}/del" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
@@ -39,7 +39,7 @@
 		{% for res in resources %}
 		<tr>
 			<td>{{ res.name }}</td>
-			<td>{{ res.start_time }} : 00 - {{ res.end_time }} : 00</td>
+			<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
 			<td>{{ res.capacity }}</td>
 		</tr>
 		{% endfor %}

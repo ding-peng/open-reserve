@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link rel="stylesheet" href="static/css/bootstrap.min.css">
-	<script type="text/javascript" src="static/js/jquery-1.11.2.min.js"></script>
-	<script type="text/javascript" src="static/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="/static/css/bootstrap.min.css">
+	<script type="text/javascript" src="/static/js/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -46,7 +46,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">New Resource</h4>
       </div>
-      <form class="form" method="post" role="form">
+      <form class="form" action="/add" method="post" role="form">
       <div class="modal-body">
       	<div class="form-group">
     		<label for="resourceName">Resource Name</label>
@@ -76,7 +76,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" action="/" class="btn btn-primary">Create</button>
+        <button type="submit" class="btn btn-primary">Create</button>
       </div>
       </form>
     </div>

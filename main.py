@@ -39,7 +39,10 @@ class MainPage(webapp2.RequestHandler):
         else:
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))
+         
 
+class Resource(webapp2.RequestHandler):
+    
     def post(self):
         user = users.get_current_user()
         if user:
@@ -48,8 +51,10 @@ class MainPage(webapp2.RequestHandler):
                 owner = user
                 start = cgi.escape(self.request.get('start'))
                 end = cgi.escape(self.request.get('end'))
-                start_time = datetime.strptime(start, "%H:%M").time()
-                end_time = datetime.strptime(end, "%H:%M").time()
+                start_time = datetime.strptime(start, "%H:%M")
+                end_time = datetime.strptime(end, "%H:%M")
+                if start_time > end_time:
+                    self.redirect("/")
                 tags = []#cgi.escape(self.request.get('tags'))
                 capacity = int(cgi.escape(self.request.get('capacity')))
                 description = cgi.escape(self.request.get('description'))
@@ -62,4 +67,5 @@ class MainPage(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
+    ('/add', Resource),
 ], debug=True)
