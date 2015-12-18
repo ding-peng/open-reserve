@@ -25,6 +25,16 @@
 				{% endif %}
 			</div>
 		</div>
+		<div class="row">
+			<div class="col-md-2">
+				<b>Tags:</b>
+			</div>
+			<div class="col-md-10">
+				{% for t in resource.tags %}
+				<a class="label label-info" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}</a>
+				{% endfor %}
+			</div>
+		</div>
 	</li>
 	<li class="list-group-item">
 		<div class="row">

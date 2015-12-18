@@ -89,6 +89,10 @@ def GetTag(id):
     return Tag.get_by_id(id)
 
 
+def GetTagbyName(name):
+    return Tag.query(Tag.tag_name==name).get()
+
+
 def GetTagResource(tag):
     return Resource.query(Resource.tags==tag)
 
