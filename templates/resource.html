@@ -46,7 +46,29 @@
 		</div>
 	</li>
 </ul>
-
+<h4>Current and Upcoming Reservations</h4>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Reserve Time</th>
+			<th>Reserver</th>
+			<th>Event Time</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for res in reservations %}
+		<tr>
+			<td>{{ res.reserve_time }}
+				{% if res.start < now %}
+					Now!!!
+				{% endif %}
+			</td>
+			<td>{{ res.reserver }}</td>
+			<td>{{ res.start }} - {{ res.end }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
 <!-- Reserve Modal -->
 <div class="modal fade" id="reserve" tabindex="-1" role="dialog" aria-labelledby="reserveLabel">
   <div class="modal-dialog" role="document">
