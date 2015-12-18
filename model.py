@@ -33,6 +33,30 @@ def AllResource():
     return Resource.query().order(-Resource.last_res_time)
 
 
+def FilterResourceByName(resources, name):
+    # naive implementation, just compare string
+    results = []
+    for res in resources:
+        if name in res.name:
+            results.append(res)
+    return results
+
+
+def GetResourceByDatetime(start, end):
+    resources = AllResource()
+    results = []
+    for c_res in resources:
+        reservations = GetResourceReservation(c_res)
+        cur_reserve_num = 0
+        for res in reservations:
+            if (start <= res.start and end >= res.start) or (start <= res.end and end >= res.end):
+                    cur_reserve_num += 1
+        if cur_reserve_num < c_res.capacity and c_res.start_time.time() < start.time() and c_res.end_time.time() > end.time():
+            results.append(c_res)
+    return results
+
+
+
 def MyResource(user):
     return Resource.query(Resource.owner==user)
 
