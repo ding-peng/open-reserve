@@ -69,7 +69,18 @@ class Resource(webapp2.RequestHandler):
                 self.redirect("/")
             # TODO: change to resource page
 
+
+class Cron(webapp2.RequestHandler):
+
+    def get(self):
+        reservations = model.AllUsersReservations()
+        for res in reservations:
+            if res.end <= datetime.now():
+                model.DelReservation(res.key.id(), res.key.parent().get())
+
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/add', Resource),
+    ('/check', Cron),
 ], debug=True)

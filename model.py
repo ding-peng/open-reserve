@@ -70,8 +70,11 @@ def GetReservation(id, parent):
 
 
 def AllReservations(user):
-    # TODO: time has passed
     return Reservation.query(Reservation.reserver==user).order(Reservation.reserve_time)
+
+
+def AllUsersReservations():
+    return Reservation.query()
 
 
 def GetResourceReservation(resource):
