@@ -17,7 +17,7 @@
 		{% for res in reservations %}
 		<tr>
 			<td>{{ res.reserve_time }}</td>
-			<td>{{ res.resource.name }}</td>
+			<td>{{ res.key.parent().get().name }}</td>
 			<td>{{ res.start }} - {{ res.end }}</td>
 			<td>
             	<a href="/reservation/{{ res.id }}/del" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>

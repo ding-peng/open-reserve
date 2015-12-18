@@ -22,7 +22,7 @@ class Resource(ndb.Model):
 
 
 class Reservation(ndb.Model):
-    resource = ndb.StructuredProperty(Resource)
+    #resource = ndb.StructuredProperty(Resource)
     start = ndb.DateTimeProperty()
     end = ndb.DateTimeProperty()
     # TODO: add validator
@@ -48,7 +48,7 @@ def AllReservations(user):
 
 
 def GetResourceReservation(resource):
-    return Reservation.query(Reservation.resource==resource).order(Reservation.reserve_time)
+    return Reservation.query(ancestor=resource.key).order(Reservation.reserve_time)
 
 
 def AllTags():
@@ -72,8 +72,7 @@ def AddResource(user, name, start_time, end_time,
 
 
 def AddReservation(user, resource, start, end):
-    reservation = Reservation(resource=resource,
-                              reserver=user, start=start, end=end)
+    reservation = Reservation(reserver=user, start=start, end=end, parent=resource.key)
     reservation.put()
     resource.last_res_time = datetime.datetime.now()
     resource.reserved_num += 1
