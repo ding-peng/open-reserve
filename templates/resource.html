@@ -15,7 +15,14 @@
 				<b>Owner:</b>
 			</div>
 			<div class="col-md-3">
-				{{ resource.owner }}
+				{% if resource.owner == user %}
+					You own it.
+					<span type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit">
+        			Edit
+					</button>
+				{% else %}
+					{{ resource.owner }}
+				{% endif %}
 			</div>
 		</div>
 	</li>
@@ -41,7 +48,7 @@
 </ul>
 
 <!-- Modal -->
-<div class="modal fade" id="reserve" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="reserve" tabindex="-1" role="dialog" aria-labelledby="reserveLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -67,6 +74,51 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Reserve</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="editLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Edit Resource</h4>
+      </div>
+      <form class="form" action="/resource/edit/{{ resource.key.id() }}" method="post" role="form">
+      <div class="modal-body">
+      	      	<div class="form-group">
+    		<label for="resourceName">Resource Name</label>
+    		<input class="form-control" id="resourceName" name="resourceName" value="{{ resource.name }}" required>
+  		</div>
+  		<div class="form-group">
+    		<label for="start">Start Time</label>
+    		<input class="form-control" id="start" name="start" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.start_time }}" required>
+  		</div>
+  		<div class="form-group">
+    		<label for="end">End &nbsp;&nbsp;Time</label>
+    		<input class="form-control" id="end" name="end" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" value="{{ resource.end_time}}" required>
+    	</div>
+    	<div class="form-group">
+    		<label for="capacity">Capacity&nbsp;&nbsp;&nbsp;</label>
+    		<input class="form-control" id="capacity" name="capacity" pattern="[0-9]+" value="{{ resource.capacity }}" required>
+    	</div>
+    	<div class="form-group">
+    		<label for="tags">Tags (Seperate by space)</label>
+    		<input class="form-control" id="tags" name="tags" value="{{ resoource.tags }}">
+    	</div>
+    	<div class="form-group">
+    		<label for="des">Descriptions</label>
+    		<textarea class="form-control" id="des" name="des" value="{{ resource.description }}"></textarea>
+    	</div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Update</button>
       </div>
       </form>
     </div>

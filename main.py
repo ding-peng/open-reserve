@@ -47,21 +47,25 @@ class Resource(webapp2.RequestHandler):
         user = users.get_current_user()
         if user:
             try:
-                name = cgi.escape(self.request.get('resourceName'))
+                name = cgi.escape(self.request.get('resourceName')).strip()
                 owner = user
-                start = cgi.escape(self.request.get('start'))
-                end = cgi.escape(self.request.get('end'))
+                start = cgi.escape(self.request.get('start')).strip()
+                end = cgi.escape(self.request.get('end')).strip()
                 start_time = datetime.strptime(start, "%H:%M")
                 end_time = datetime.strptime(end, "%H:%M")
                 if start_time > end_time:
                     self.redirect("/")
-                tags = []#cgi.escape(self.request.get('tags'))
-                capacity = int(cgi.escape(self.request.get('capacity')))
-                description = cgi.escape(self.request.get('description'))
+                raw_tags = cgi.escape(self.request.get('tags')).strip().split(" ")
+                tags = []
+                for t in raw_tags:
+                    tags.append(model.AddTag(t))
+                capacity = int(cgi.escape(self.request.get('capacity')).strip())
+                description = cgi.escape(self.request.get('description')).strip()
                 resource = model.AddResource(user, name, start_time, end_time,
                                              tags, capacity, description)
                 self.redirect("/")
-            except:
+            except Exception as e:
+                print e
                 self.redirect("/")
             # TODO: change to resource page
 

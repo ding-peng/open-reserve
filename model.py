@@ -22,7 +22,6 @@ class Resource(ndb.Model):
 
 
 class Reservation(ndb.Model):
-    #resource = ndb.StructuredProperty(Resource)
     start = ndb.DateTimeProperty()
     end = ndb.DateTimeProperty()
     # TODO: add validator
@@ -81,9 +80,12 @@ def AddReservation(user, resource, start, end):
 
 
 def AddTag(name):
-    tag = Tag(tag_name=name)
-    tag.put()
-    return Tag
+    if not Tag.query(Tag.tag_name==name).get():
+        tag = Tag(tag_name=name)
+        tag.put()
+        return tag
+    else:
+        return Tag.query(Tag.tag_name==name).get()
 
 
 def DelReservation(id):
@@ -91,9 +93,9 @@ def DelReservation(id):
     key.delete()
 
 
-def UpdateResource(id, name, start_time, end_time,
+def UpdateResource(id, owner, name, start_time, end_time,
                    tags, capacity, description):
-    res = Resource(id=id, name=name, start_time=start_time,
+    res = Resource(id=id, owner=owner, name=name, start_time=start_time,
                    end_time=end_time, capacity=capacity, tags=tags,
                    description=description)
     res.put()
