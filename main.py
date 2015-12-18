@@ -8,7 +8,7 @@ import urllib
 import cgi
 import jinja2
 import webapp2
-import time
+from datetime import datetime, date, time
 
 from google.appengine.api import users
 
@@ -28,7 +28,6 @@ class MainPage(webapp2.RequestHandler):
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
             resources = model.AllResource()
-            print resources
             tags = model.AllTags()
             my_resources = model.MyResource(user)
             values = {'resources':resources,
@@ -44,16 +43,21 @@ class MainPage(webapp2.RequestHandler):
     def post(self):
         user = users.get_current_user()
         if user:
-            name = cgi.escape(self.request.get('resourceName'))
-            owner = user
-            start = int(cgi.escape(self.request.get('start')))
-            end = int(cgi.escape(self.request.get('end')))
-            tags = []#cgi.escape(self.request.get('tags'))
-            capacity = int(cgi.escape(self.request.get('capacity')))
-            description = cgi.escape(self.request.get('description'))
-            resource = model.AddResource(user, name, start, end,
-                                         tags, capacity, description)
-            self.redirect("/")
+            try:
+                name = cgi.escape(self.request.get('resourceName'))
+                owner = user
+                start = cgi.escape(self.request.get('start'))
+                end = cgi.escape(self.request.get('end'))
+                start_time = datetime.strptime(start, "%H:%M").time()
+                end_time = datetime.strptime(end, "%H:%M").time()
+                tags = []#cgi.escape(self.request.get('tags'))
+                capacity = int(cgi.escape(self.request.get('capacity')))
+                description = cgi.escape(self.request.get('description'))
+                resource = model.AddResource(user, name, start_time, end_time,
+                                             tags, capacity, description)
+                self.redirect("/")
+            except:
+                self.redirect("/")
             # TODO: change to resource page
 
 app = webapp2.WSGIApplication([

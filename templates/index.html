@@ -18,7 +18,7 @@
 		<tr>
 			<td>{{ res.resource.name }}</td>
 			<td>{{ res.reserve_time }}</td>
-			<td>{{ res.start }} : 00 - {{ res.end }} : 00</td>
+			<td>{{ res.start }} - {{ res.end }}</td>
 			<td>
             	<a href="/reservation/{{ res.id }}/del" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
         	</td>

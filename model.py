@@ -12,8 +12,8 @@ class Tag(ndb.Model):
 class Resource(ndb.Model):
     name = ndb.StringProperty()
     owner = ndb.UserProperty()
-    start_time = ndb.IntegerProperty()
-    end_time = ndb.IntegerProperty()
+    start_time = ndb.TimeProperty()
+    end_time = ndb.TimeProperty()
     tags = ndb.StructuredProperty(Tag, repeated=True)
     last_res_time = ndb.DateTimeProperty(default=None)
     description = ndb.StringProperty(default="")
@@ -39,7 +39,7 @@ def MyResource(user):
 
 
 def GetResource(id):
-    return Resource.query(id=id)
+    return Resource.query(id=id).get()
 
 
 def AllReservations(user):
@@ -50,9 +50,17 @@ def AllReservations(user):
 def GetResourceReservation(resource):
     return Reservation.query(resource==resource).order(Reservation.reserve_time)
 
+
 def AllTags():
     return Tag.query()
 
+
+def GetTag(id):
+    return Tag.query(id=id).get()
+
+
+def GetTagResource(tag):
+    return Resource.query(Resource.tags==tag)
 
 def AddResource(user, name, start_time, end_time,
                 tags, capacity, description):
@@ -74,7 +82,7 @@ def AddReservation(user, resource, start, end):
 
 
 def AddTag(name):
-    tag = Tag(name)
+    tag = Tag(tag_name=name)
     tag.put()
     return Tag
 

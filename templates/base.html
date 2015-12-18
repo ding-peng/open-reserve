@@ -50,19 +50,19 @@
       <div class="modal-body">
       	<div class="form-group">
     		<label for="resourceName">Resource Name</label>
-    		<input class="form-control" id="resourceName" name="resourceName">
+    		<input class="form-control" id="resourceName" name="resourceName" required>
   		</div>
   		<div class="form-group">
     		<label for="start">Start Time</label>
-    		<input type="number" id="start" name="start" min="0" max="23">:00
+    		<input class="form-control" id="start" name="start" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" required>
   		</div>
   		<div class="form-group">
     		<label for="end">End &nbsp;&nbsp;Time</label>
-    		<input type="number" id="end" name="end" min="0" max="23">:00
+    		<input class="form-control" id="end" name="end" pattern="([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]" required>
     	</div>
     	<div class="form-group">
     		<label for="capacity">Capacity&nbsp;&nbsp;&nbsp;</label>
-    		<input type="number" id="capacity" name="capacity" min="1">
+    		<input class="form-control" id="capacity" name="capacity" pattern="[0-9]+" required>
     	</div>
     	<div class="form-group">
     		<label for="tags">Tags</label>
