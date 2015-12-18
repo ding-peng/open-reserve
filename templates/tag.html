@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if tag %}
+<h3>Resource with Tag: {{ tag.tag_name }}</h3>
+{% endif %}
+
+{% if search %}
+<h3>Search Results For: {{ search }}
+{% if limit %}
+From {{ date.date() }} {{ start }} To {{ end }}
+{% endif %}
+</h3>
+{% endif %}
+
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Resource Name</th>
+			<th>Available Time</th>
+			<th>Capacity</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for res in resources %}
+		<tr>
+			<td>{{ res.name }}</td>
+			<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
+			<td>{{ res.capacity }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}

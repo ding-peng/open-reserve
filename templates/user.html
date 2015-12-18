@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+  	<div class="col-md-12">
+  		<h4>User Reservations</h4>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Reserve Time</th>
+			<th>Resource Name</th>
+			<th>Event Time</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for res in reservations %}
+		<tr>
+			<td>{{ res.reserve_time }}</td>
+			<td>{{ res.key.parent().get().name }}</td>
+			<td>{{ res.start }} - {{ res.end }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+<h4>User Resources</h4>
+<table class="table table-hover">
+	<thead>
+		<tr>
+			<th>Resource Name</th>
+			<th>Available Time</th>
+			<th>Capacity</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for res in resources %}
+		<tr>
+			<td>{{ res.name }}</td>
+			<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
+			<td>{{ res.capacity }}</td>
+		</tr>
+		{% endfor %}
+	</tbody>
+</table>
+  	</div>
+</div>
+
+
+{% endblock %}

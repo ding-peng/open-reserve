@@ -26,10 +26,10 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-2">
+			<div class="col-md-1">
 				<b>Tags:</b>
 			</div>
-			<div class="col-md-10">
+			<div class="col-md-11">
 				{% for t in resource.tags %}
 				<a class="label label-info" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}</a>
 				{% endfor %}
