@@ -35,12 +35,23 @@ def AllResource():
 
 
 def MyResource(user):
-    return Resource.query(owner==user)
+    return Resource.query(Resource.owner==user)
+
+
+def GetResource(id):
+    return Resource.query(id=id)
 
 
 def AllReservations(user):
     # TODO: time has passed
     return Reservation.query(Reservation.reserver==user).order(Reservation.reserve_time)
+
+
+def GetResourceReservation(resource):
+    return Reservation.query(resource==resource).order(Reservation.reserve_time)
+
+def AllTags():
+    return Tag.query()
 
 
 def AddResource(user, name, start_time, end_time,

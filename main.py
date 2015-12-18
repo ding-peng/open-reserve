@@ -28,8 +28,13 @@ class MainPage(webapp2.RequestHandler):
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
             resources = model.AllResource()
+            print resources
+            tags = model.AllTags()
+            my_resources = model.MyResource(user)
             values = {'resources':resources,
-                      'reservations': reservations}
+                      'reservations': reservations,
+                      'tags': tags,
+                      'my_resources': my_resources}
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(values))
         else:
@@ -39,7 +44,7 @@ class MainPage(webapp2.RequestHandler):
     def post(self):
         user = users.get_current_user()
         if user:
-            name = cgi.escape(self.request.get('name'))
+            name = cgi.escape(self.request.get('resourceName'))
             owner = user
             start = int(cgi.escape(self.request.get('start')))
             end = int(cgi.escape(self.request.get('end')))
@@ -49,8 +54,7 @@ class MainPage(webapp2.RequestHandler):
             resource = model.AddResource(user, name, start, end,
                                          tags, capacity, description)
             self.redirect("/")
-
-
+            # TODO: change to resource page
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
