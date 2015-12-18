@@ -23,10 +23,9 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class User(webapp2.RequestHandler):
 
-    def get(self):
-        user = users.get_current_user()
+    def get(self, user_id):
+        user = users.User(_user_id = user_id)
         if user:
-            log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
             resources = model.AllResource()
             values = {'resources': resources,

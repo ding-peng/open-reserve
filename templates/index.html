@@ -5,61 +5,65 @@
 <div class="row">
   	<div class="col-md-9">
   		<h4>My Reservations</h4>
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>Reserve Time</th>
-			<th>Resource Name</th>
-			<th>Event Time</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for res in reservations %}
-		<tr>
-			<td>{{ res.reserve_time }}</td>
-			<td>{{ res.key.parent().get().name }}</td>
-			<td>{{ res.start }} - {{ res.end }}</td>
-			<td>
-            	<a href="/user/del/{{ res.key.parent().get().key.id() }}/{{ res.key.id() }}" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
-        	</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
-<h4>All Resources</h4>
-<table class="table table-hover">
-	<thead>
-		<tr>
-			<th>Resource Name</th>
-			<th>Available Time</th>
-			<th>Capacity</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for res in resources %}
-		<tr>
-			<td>{{ res.name }}</td>
-			<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
-			<td>{{ res.capacity }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
-</table>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Reserve Time</th>
+					<th>Resource Name</th>
+					<th>Event Time</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for res in reservations %}
+				<tr>
+					<td>{{ res.reserve_time }}</td>
+					<td>{{ res.key.parent().get().name }}</td>
+					<td>{{ res.start }} - {{ res.end }}</td>
+					<td>
+		            	<a href="/user/del/{{ res.key.parent().get().key.id() }}/{{ res.key.id() }}" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
+		        	</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		<h4>All Resources</h4>
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>Resource Name</th>
+					<th>Available Time</th>
+					<th>Capacity</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for res in resources %}
+				<tr class='clickable-row' data-href='/resource/{{ res.key.id() }}'>
+					<td>{{ res.name }}</td>
+					<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
+					<td>{{ res.capacity }}</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
   	</div>
-  <div class="col-md-3">
-<div class="list-group">
-	<h4>My Resources</h4>
-	{% for res in my_resources %}
-		<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
-	{% endfor %}
-</div>
+  	<div class="col-md-3">
+		<div class="list-group">
+			<h4>My Resources</h4>
+			{% for res in my_resources %}
+				<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
+			{% endfor %}
+		</div>
   </div>
 </div>
 
 
-
-
-
+<script>
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
 
 
 {% endblock %}
