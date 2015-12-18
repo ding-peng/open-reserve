@@ -1,3 +1,9 @@
-{% for res in reservations %}
-aaa
+{% extends "base.html" %}
+
+{% block content %}
+
+{% for res in resources %}
+  <p>{{ res.capacity }}</p>
 {% endfor %}
+
+{% endblock %}

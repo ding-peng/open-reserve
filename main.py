@@ -5,8 +5,10 @@
 
 import os
 import urllib
+import cgi
 import jinja2
 import webapp2
+import time
 
 from google.appengine.api import users
 
@@ -33,6 +35,21 @@ class MainPage(webapp2.RequestHandler):
         else:
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))
+
+    def post(self):
+        user = users.get_current_user()
+        if user:
+            name = cgi.escape(self.request.get('name'))
+            owner = user
+            start = int(cgi.escape(self.request.get('start')))
+            end = int(cgi.escape(self.request.get('end')))
+            tags = []#cgi.escape(self.request.get('tags'))
+            capacity = int(cgi.escape(self.request.get('capacity')))
+            description = cgi.escape(self.request.get('description'))
+            resource = model.AddResource(user, name, start, end,
+                                         tags, capacity, description)
+            self.redirect("/")
+
 
 
 app = webapp2.WSGIApplication([

@@ -5,7 +5,9 @@ api_version: 1
 threadsafe: true
 
 handlers:
-- url: /.*
+- url: /static
+  static_dir: templates/static
+- url: /
   script: main.app
 
 libraries:

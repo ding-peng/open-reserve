@@ -12,12 +12,12 @@ class Tag(ndb.Model):
 class Resource(ndb.Model):
     name = ndb.StringProperty()
     owner = ndb.UserProperty()
-    start_time = ndb.TimeProperty()
-    end_time = ndb.TimeProperty()
+    start_time = ndb.IntegerProperty()
+    end_time = ndb.IntegerProperty()
     tags = ndb.StructuredProperty(Tag, repeated=True)
     last_res_time = ndb.DateTimeProperty(default=None)
     description = ndb.StringProperty(default="")
-    viewed_num = ndb.IntegerProperty(default=0)
+    reserved_num = ndb.IntegerProperty(default=0)
     capacity = ndb.IntegerProperty(default=1)
 
 
@@ -57,6 +57,7 @@ def AddReservation(user, resource, start, end):
                               owner=user, start=start, end=end)
     reservation.put()
     resource.last_res_time = datetime.datetime.now()
+    resource.reserved_num += 1
     resource.put()
     return reservation
 
