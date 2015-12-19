@@ -16,39 +16,6 @@ indexes:
   - name: reserve_time
 
 - kind: Reservation
-  properties:
-  - name: resource.capacity
-  - name: resource.description
-  - name: resource.end_time
-  - name: resource.last_res_time
-  - name: resource.name
-  - name: resource.owner
-  - name: resource.reserved_num
-  - name: resource.start_time
-  - name: reserve_time
-
-- kind: Reservation
-  properties:
-  - name: resource.capacity
-  - name: resource.description
-  - name: resource.end_time
-  - name: resource.name
-  - name: resource.owner
-  - name: resource.reserved_num
-  - name: resource.start_time
-  - name: reserve_time
-
-- kind: Reservation
-  properties:
-  - name: resource.capacity
-  - name: resource.description
-  - name: resource.end_time
-  - name: resource.name
-  - name: resource.owner
-  - name: resource.start_time
-  - name: reserve_time
-
-- kind: Reservation
   ancestor: yes
   properties:
   - name: reserve_time
