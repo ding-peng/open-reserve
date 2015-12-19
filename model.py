@@ -7,6 +7,7 @@ import datetime
 
 class Tag(ndb.Model):
     tag_name = ndb.StringProperty()
+    total_res = ndb.IntegerProperty(default=0)
 
 
 class Resource(ndb.Model):
@@ -19,12 +20,12 @@ class Resource(ndb.Model):
     description = ndb.StringProperty(default="")
     reserved_num = ndb.IntegerProperty(default=0)
     capacity = ndb.IntegerProperty(default=1)
+    image = ndb.BlobProperty()
 
 
 class Reservation(ndb.Model):
     start = ndb.DateTimeProperty()
     end = ndb.DateTimeProperty()
-    # TODO: add validator
     reserver = ndb.UserProperty()
     reserve_time = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -54,7 +55,6 @@ def GetResourceByDatetime(start, end):
         if cur_reserve_num < c_res.capacity and c_res.start_time.time() < start.time() and c_res.end_time.time() > end.time():
             results.append(c_res)
     return results
-
 
 
 def MyResource(user):
@@ -96,12 +96,17 @@ def GetTagbyName(name):
 def GetTagResource(tag):
     return Resource.query(Resource.tags==tag)
 
+
 def AddResource(user, name, start_time, end_time,
                 tags, capacity, description):
     res = Resource(name=name, owner=user, start_time=start_time,
                    end_time=end_time, capacity=capacity, tags=tags,
                    description=description)
     res.put()
+    for t in tags:
+        tag = GetTagbyName(t.tag_name)
+        tag.total_res += 1
+        tag.put()
     return res
 
 
@@ -130,8 +135,13 @@ def DelReservation(id, parent):
 
 def UpdateResource(id, owner, name, start_time, end_time,
                    tags, capacity, description):
-    res = Resource(id=id, owner=owner, name=name, start_time=start_time,
-                   end_time=end_time, capacity=capacity, tags=tags,
-                   description=description)
+    res = id.get()
+    res.owner = owner
+    res.name = name
+    res.start_time = start_time
+    res.end_time = end_time
+    res.tags = tags
+    res.capacity = capacity
+    res.description = description
     res.put()
     return res

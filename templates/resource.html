@@ -1,68 +1,131 @@
 {% extends "base.html" %}
 
+{% block login %}
+<a type="submit" class="btn btn-default" href="{{ log_url }}">Log Out</a>
+{% endblock %}
+
+
 {% block content %}
 
-<ul class="list-group">
-	<li class="list-group-item">
+<div class="row">
+	<div class="col-md-3">
+		<p></p>
+		<div>
+		{% if resource.image %}
+		<img src="/resource/img?img_id={{ resource.key.urlsafe() }}"></img>
+		{% endif %}
+		</div>
+		<div><p></p><a href="/resource/rss/{{ resource.key.id() }}">Get RSS</a></div>
+		<div>
+			<p></p>
+			<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#reserve">
+        		Reserve Now !
+			</button>
+		</div>
+	</div>
+	<div class="col-md-9">
 		<div class="row">
-			<div class="col-md-3">
-				<b>Resource Name:</b>
+			<div class="col-md-6">
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">Resource Name</div>
+		      		<label class="form-control" style="width:200px;">{{ resource.name }}</label>
+				</div>
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">Owner</div>
+		      		<label class="form-control" style="width:200px;">
+		      			{% if resource.owner == user %}
+							You own it.
+							<a data-toggle="modal" data-target="#edit">
+		        			Click to edit.
+							</a>
+						{% else %}
+							{{ resource.owner }}
+						{% endif %}
+					</label>
+				</div>
 			</div>
-			<div class="col-md-3">
-				{{ resource.name }}
-			</div>
-			<div class="col-md-3">
-				<b>Owner:</b>
-			</div>
-			<div class="col-md-3">
-				{% if resource.owner == user %}
-					You own it.
-					<span type="button" class="btn btn-primary" data-toggle="modal" data-target="#edit">
-        			Edit
-					</button>
-				{% else %}
-					{{ resource.owner }}
-				{% endif %}
+			<div class="col-md-6">
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">Start Time</div>
+		      		<label class="form-control" style="width:200px;">
+		      			{{ resource.start_time.time() }}
+		      		</label>
+				</div>
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">End Time</div>
+		      		<label class="form-control" style="width:200px;">
+		      			{{ resource.end_time.time() }}
+					</label>
+				</div>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-1">
-				<b>Tags:</b>
+			<div class="col-md-6">
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">Capacity</div>
+		      		<label class="form-control" style="width:200px;">{{ resource.capacity }}</label>
+				</div>
 			</div>
-			<div class="col-md-11">
+			<div class="col-md-6">
+				<p></p>
+				<div class="input-group">
+					<div class="input-group-addon" style="width:200px;">History Reseved</div>
+		      		<label class="form-control" style="width:200px;">
+		      			{{ resource.reserved_num }}
+		      		</label>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<p></p>
+				<label>Tags:</label>
 				{% for t in resource.tags %}
-				<a class="label label-info" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}</a>
+					&nbsp;
+					<a class="label label-info" href="/resource/tag/{{ t.tag_name }}">
+						{{ t.tag_name }}
+					</a>
+					&nbsp;
 				{% endfor %}
 			</div>
 		</div>
-	</li>
-	<li class="list-group-item">
 		<div class="row">
-			<div class="col-md-3">
-				<b>Start Time</b>
-				{{ resource.start_time.time() }}
-			</div>
-			<div class="col-md-3">
-				<b>End Time</b>
-				{{ resource.end_time.time() }}
-			</div>
-			<div class="col-md-3">
-			</div>
-			<div class="col-md-3">
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reserve">
-        Reserve!
-		</button>
+			<p></p>
+			<div class="col-md-12">
+			<label>Descriptions:</label>
 			</div>
 		</div>
-	</li>
-</ul>
+		<div class="row">
+			<p></p>
+			<div class="col-md-12">
+			{% if resource.description %}
+			<p>{{ resource.description }}</p>
+			{% else %}
+			<p>No Description</p>
+			{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
 <h4>Current and Upcoming Reservations</h4>
 <table class="table table-hover">
 	<thead>
 		<tr>
 			<th>Reserve Time</th>
-			<th>Reserver</th>
-			<th>Event Time</th>
+			<th>Reserved By</th>
+			<th>Reservation Begin</th>
+			<th>Reservation End</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -74,7 +137,8 @@
 				{% endif %}
 			</td>
 			<td>{{ res.reserver }}</td>
-			<td>{{ res.start }} - {{ res.end }}</td>
+			<td>{{ res.start }}</td>
+			<td>{{ res.end }}</td>
 		</tr>
 		{% endfor %}
 	</tbody>
@@ -120,7 +184,7 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Edit Resource</h4>
       </div>
-      <form class="form" action="/resource/edit/{{ resource.key.id() }}" method="post" role="form">
+      <form class="form" action="/resource/edit/{{ resource.key.id() }}" method="post" role="form" enctype="multipart/form-data">
       <div class="modal-body">
       	      	<div class="form-group">
     		<label for="resourceName">Resource Name</label>
@@ -146,7 +210,10 @@
     		<label for="des">Descriptions</label>
     		<textarea class="form-control" id="des" name="des" value="{{ resource.description }}"></textarea>
     	</div>
-
+    	<div class="form-group">
+		    <label for="img">Image:</label>
+		    <input type="file" class="form-control" id="img" name="img"/>
+		</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

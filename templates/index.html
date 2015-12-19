@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+{% block login %}
+<a type="submit" class="btn btn-default" href="{{ log_url }}">Log Out</a>
+{% endblock %}
+
+
 {% block content %}
 
 <div class="row">
@@ -31,6 +36,7 @@
 			<thead>
 				<tr>
 					<th>Resource Name</th>
+					<th>Owner</th>
 					<th>Available Time</th>
 					<th>Capacity</th>
 				</tr>
@@ -39,9 +45,17 @@
 				{% for res in resources %}
 				<tr class='clickable-row' data-href='/resource/{{ res.key.id() }}'>
 					<td>{{ res.name }}</td>
+					<td>{{ res.owner }}</td>
 					<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
 					<td>{{ res.capacity }}</td>
-					<!-- TODO <td>Tags: {{ res.tags.tag_name }}</td>-->
+				</tr>
+				<tr>
+					<td colspan="4">
+						Tags:
+						{% for t in res.tags %}
+							<a class="label label-info" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}</a>
+						{% endfor %}
+					</td>
 				</tr>
 				{% endfor %}
 			</tbody>

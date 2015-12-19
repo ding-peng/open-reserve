@@ -11,6 +11,7 @@ import webapp2
 from datetime import datetime, date, time
 
 from google.appengine.api import users
+from google.appengine.api import images
 
 import model
 
@@ -33,16 +34,17 @@ class MainPage(webapp2.RequestHandler):
             values = {'resources':resources,
                       'reservations': reservations,
                       'tags': tags,
-                      'my_resources': my_resources}
+                      'my_resources': my_resources,
+                      'log_url': log_url}
             template = JINJA_ENVIRONMENT.get_template('index.html')
             self.response.write(template.render(values))
         else:
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))
-         
+
 
 class Resource(webapp2.RequestHandler):
-    
+
     def post(self):
         user = users.get_current_user()
         if user:
@@ -63,11 +65,18 @@ class Resource(webapp2.RequestHandler):
                 description = cgi.escape(self.request.get('description')).strip()
                 resource = model.AddResource(user, name, start_time, end_time,
                                              tags, capacity, description)
+                image = self.request.get('img')
+                if image:
+                    image = images.resize(image, 200, 200)
+                    resource.image = image
+                    resource.put()
                 self.redirect("/")
             except Exception as e:
                 print e
                 self.redirect("/")
-            # TODO: change to resource page
+        else:
+            log_url = users.create_login_url(self.request.uri)
+            self.redirect(users.create_login_url(self.request.uri))
 
 
 class Cron(webapp2.RequestHandler):
