@@ -45,67 +45,75 @@ class Resource(webapp2.RequestHandler):
     def post(self, resource_id):
         user = users.get_current_user()
         if user:
-            resource = model.GetResource(int(resource_id))
-            if resource.owner == user:
-                name = cgi.escape(self.request.get('resourceName')).strip()
-                owner = user
-                start = cgi.escape(self.request.get('start')).strip()
-                end = cgi.escape(self.request.get('end')).strip()
-                start_time = datetime.strptime(start, "%H:%M")
-                end_time = datetime.strptime(end, "%H:%M")
-                if start_time > end_time:
-                    self.redirect("/")
-                raw_tags = cgi.escape(self.request.get('tags')).strip().split(" ")
-                tags = []
-                for t in raw_tags:
-                    tags.append(model.AddTag(t))
-                capacity = int(cgi.escape(self.request.get('capacity')).strip())
-                description = cgi.escape(self.request.get('description')).strip()
-                new_resource = model.UpdateResource(resource.key,
-                                                    user, name, start_time, end_time,
-                                                    tags, capacity, description)
-                image = self.request.get('img')
-                if image:
-                    image = images.resize(image, 200, 200)
-                    resource.image = image
-                    resource.put()
-                self.redirect("/")
-            else:
-                log_url = users.create_login_url(self.request.uri)
-                self.redirect(users.create_login_url(self.request.uri))
+            try:
+                resource = model.GetResource(int(resource_id))
+                if resource.owner == user:
+                    name = cgi.escape(self.request.get('resourceName')).strip()
+                    owner = user
+                    start = cgi.escape(self.request.get('start')).strip()
+                    end = cgi.escape(self.request.get('end')).strip()
+                    start_time = datetime.strptime(start, "%H:%M")
+                    end_time = datetime.strptime(end, "%H:%M")
+                    if start_time > end_time:
+                        self.redirect("/")
+                    raw_tags = cgi.escape(self.request.get('tags')).strip().split(" ")
+                    tags = []
+                    for t in raw_tags:
+                        tags.append(model.AddTag(t))
+                    capacity = int(cgi.escape(self.request.get('capacity')).strip())
+                    description = cgi.escape(self.request.get('description')).strip()
+                    new_resource = model.UpdateResource(resource.key,
+                                                        user, name, start_time, end_time,
+                                                        tags, capacity, description)
+                    image = self.request.get('img')
+                    if image:
+                        image = images.resize(image, 200, 200)
+                        resource.image = image
+                        resource.put()
+                    self.redirect("/resource/"+resource_id)
+            except Exception as e:
+                print e
+                self.redirect("/resource/"+resource_id)
+        else:
+            log_url = users.create_login_url(self.request.uri)
+            self.redirect(users.create_login_url(self.request.uri))
 
 class Reserve(webapp2.RequestHandler):
 
     def post(self, resource_id):
         user = users.get_current_user()
         if user:
-            resource = model.GetResource(int(resource_id))
-            date = cgi.escape(self.request.get('date'))
-            date = datetime.strptime(date, "%Y-%m-%d")
-            start = cgi.escape(self.request.get('start'))
-            end = cgi.escape(self.request.get('end'))
-            start_time = datetime.strptime(start, "%H:%M").time()
-            end_time = datetime.strptime(end, "%H:%M").time()
-            start_datetime = datetime.combine(date, start_time)
-            end_datetime = datetime.combine(date, end_time)
-            if (start_time <= resource.start_time.time() and end_time >= resource.start_time.time()) or (start_time <= resource.end_time.time() and end_time >= resource.end_time.time()):
-                self.redirect("/")
-            current_res = model.GetResourceReservation(resource)
-            cur_reserve_num = 0
-            for res in current_res:
-                if (start_datetime <= res.start and end_datetime >= res.start) or (start_datetime <= res.end and end_datetime >= res.end):
-                    cur_reserve_num += 1
-            user_has_no_res = True
-            user_reservations = model.AllReservations(user)
-            for u_res in user_reservations:
-                if (start_datetime <= u_res.start and end_datetime >= u_res.start) or (start <= u_res.end and end_datetime >= u_res.end):
-                    user_has_no_res = False
-            if cur_reserve_num < resource.capacity and user_has_no_res and end_time > start_time:
-                resveration = model.AddReservation(user, resource, start_datetime,
-                                                end_datetime)
-            else:
-                pass
-            self.redirect("/resource/"+resource_id)
+            try:
+                resource = model.GetResource(int(resource_id))
+                date = cgi.escape(self.request.get('date'))
+                date = datetime.strptime(date, "%Y-%m-%d")
+                start = cgi.escape(self.request.get('start'))
+                end = cgi.escape(self.request.get('end'))
+                start_time = datetime.strptime(start, "%H:%M").time()
+                end_time = datetime.strptime(end, "%H:%M").time()
+                start_datetime = datetime.combine(date, start_time)
+                end_datetime = datetime.combine(date, end_time)
+                if (start_time <= resource.start_time.time() and end_time >= resource.start_time.time()) or (start_time <= resource.end_time.time() and end_time >= resource.end_time.time()):
+                    self.redirect("/")
+                current_res = model.GetResourceReservation(resource)
+                cur_reserve_num = 0
+                for res in current_res:
+                    if (start_datetime <= res.start and end_datetime >= res.start) or (start_datetime <= res.end and end_datetime >= res.end):
+                        cur_reserve_num += 1
+                user_has_no_res = True
+                user_reservations = model.AllReservations(user)
+                for u_res in user_reservations:
+                    if (start_datetime <= u_res.start and end_datetime >= u_res.start) or (start <= u_res.end and end_datetime >= u_res.end):
+                        user_has_no_res = False
+                if cur_reserve_num < resource.capacity and user_has_no_res and end_time > start_time:
+                    resveration = model.AddReservation(user, resource, start_datetime,
+                                                    end_datetime)
+                else:
+                    pass
+                self.redirect("/resource/"+resource_id)
+            except Exception as e:
+                print e
+                self.redirect("/resource/"+resource_id)
         else:
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))

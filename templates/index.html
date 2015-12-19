@@ -35,6 +35,7 @@
 				{% endfor %}
 			</tbody>
 		</table>
+		<hr>
 		<h4>All Resources</h4>
 		<table class="table table-hover">
 			<thead>
@@ -72,6 +73,7 @@
 				<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
 			{% endfor %}
 		</div>
+		<hr>
 		<div class="list-group">
 			<h4>Top Tags</h4>
 			{% for t in tags %}
