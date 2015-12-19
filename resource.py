@@ -12,6 +12,7 @@ from datetime import datetime, date, time
 
 from google.appengine.api import users
 from google.appengine.api import images
+from google.appengine.api import mail
 from google.appengine.ext import ndb
 
 import model
@@ -206,6 +207,7 @@ class Rss(webapp2.RequestHandler):
 
 
 class Image(webapp2.RequestHandler):
+
     def get(self):
         resource = ndb.Key(urlsafe=self.request.get('img_id')).get()
         if resource.image:

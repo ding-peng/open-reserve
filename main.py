@@ -12,6 +12,7 @@ from datetime import datetime, date, time
 
 from google.appengine.api import users
 from google.appengine.api import images
+from google.appengine.api import mail
 
 import model
 
@@ -73,6 +74,14 @@ class Resource(webapp2.RequestHandler):
                     image = images.resize(image, 200, 200)
                     resource.image = image
                     resource.put()
+                mail_body = "You've successfully create resource " + resource.name + " !"
+                try:
+                    mail.send_mail(sender = "Open Reserve <support@openreserve.com>",
+                                    to = user.email,
+                                    subject = "Resource Create Confirmation",
+                                    body = mail_body)
+                except:
+                    pass
                 self.redirect("/")
             except Exception as e:
                 print e
@@ -89,6 +98,15 @@ class Cron(webapp2.RequestHandler):
         for res in reservations:
             if res.end <= datetime.now():
                 model.DelReservation(res.key.id(), res.key.parent().get())
+            if res.start >= datetime.now():
+                try:
+                    mail_body = "You've reservation " + resource.name + " has started!"
+                    mail.send_mail(sender = "Open Reserve <support@openreserve.com>",
+                                    to = res.reserver.email,
+                                    subject = "Reservation Start",
+                                    body = mail_body)
+                except:
+                    pass
 
 
 app = webapp2.WSGIApplication([
