@@ -29,7 +29,7 @@ From {{ date.date() }} {{ start }} To {{ end }}
 	</thead>
 	<tbody>
 		{% for res in resources %}
-		<tr>
+		<tr class='clickable-row' data-href='/resource/{{ res.key.id() }}'>
 			<td>{{ res.name }}</td>
 			<td>{{ res.start_time.time() }} - {{ res.end_time.time() }}</td>
 			<td>{{ res.capacity }}</td>
@@ -37,5 +37,13 @@ From {{ date.date() }} {{ start }} To {{ end }}
 		{% endfor %}
 	</tbody>
 </table>
+
+<script>
+jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
 
 {% endblock %}

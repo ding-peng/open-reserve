@@ -204,7 +204,7 @@ class Rss(webapp2.RequestHandler):
             reservations = model.GetResourceReservation(resource)
             for res in reservations:
                 self.response.write('<item>')
-                self.response.write('<reserver>' + res.reserver + '</reserver>')
+                self.response.write('<reserver>' + res.reserver.email + '</reserver>')
                 self.response.write('<reserveDate>' + res.reserve_time + '</reserveDate>')
                 self.response.write('<start>' + res.start + '</start>')
                 self.response.write('<end>' + res.end + '</end>')
