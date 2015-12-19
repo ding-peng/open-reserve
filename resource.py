@@ -109,8 +109,14 @@ class Reserve(webapp2.RequestHandler):
                 if cur_reserve_num < resource.capacity and user_has_no_res and end_time > start_time:
                     resveration = model.AddReservation(user, resource, start_datetime,
                                                     end_datetime)
-                else:
-                    pass
+                    try:
+                        mail_body = "You've reserved " + resveration.resource.name + "!"
+                        mail.send_mail(sender = "Open Reserve <support@openreserve.com>",
+                                        to = '<' + res.reserver.email + '>',
+                                        subject = "Reservation Confirmation",
+                                        body = mail_body)
+                    except:
+                        pass
                 self.redirect("/resource/"+resource_id)
             except Exception as e:
                 print e
