@@ -30,11 +30,9 @@ class MainPage(webapp2.RequestHandler):
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
             resources = model.AllResource()
-            tags = model.TopTags()
             my_resources = model.MyResource(user)
             values = {'resources':resources,
                       'reservations': reservations,
-                      'tags': tags,
                       'my_resources': my_resources,
                       'log_url': log_url}
             template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -66,7 +64,7 @@ class Resource(webapp2.RequestHandler):
                 for t in raw_tags:
                     tags.append(model.AddTag(t))
                 capacity = int(cgi.escape(self.request.get('capacity')).strip())
-                description = cgi.escape(self.request.get('description')).strip()
+                description = cgi.escape(self.request.get('des')).strip()
                 resource = model.AddResource(user, name, start_time, end_time,
                                              tags, capacity, description)
                 image = self.request.get('img')

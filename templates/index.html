@@ -73,13 +73,6 @@
 				<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
 			{% endfor %}
 		</div>
-		<hr>
-		<div class="list-group">
-			<h4>Top Tags</h4>
-			{% for t in tags %}
-				<a class="list-group-item" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}<span class="badge">{{ t.total_res }}</span></a>
-			{% endfor %}
-		</div>
   </div>
 </div>
 

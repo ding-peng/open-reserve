@@ -7,7 +7,6 @@ import datetime
 
 class Tag(ndb.Model):
     tag_name = ndb.StringProperty()
-    total_res = ndb.IntegerProperty(default=0)
 
 
 class Resource(ndb.Model):
@@ -85,10 +84,6 @@ def AllTags():
     return Tag.query()
 
 
-def TopTags():
-    return Tag.query().order(-Tag.total_res).fetch(10)
-
-
 def GetTag(id):
     return Tag.get_by_id(id)
 
@@ -107,10 +102,6 @@ def AddResource(user, name, start_time, end_time,
                    end_time=end_time, capacity=capacity, tags=tags,
                    description=description)
     res.put()
-    for t in tags:
-        tag = GetTagbyName(t.tag_name)
-        tag.total_res += 1
-        tag.put()
     return res
 
 

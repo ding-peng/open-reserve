@@ -62,7 +62,7 @@ class Resource(webapp2.RequestHandler):
                     for t in raw_tags:
                         tags.append(model.AddTag(t))
                     capacity = int(cgi.escape(self.request.get('capacity')).strip())
-                    description = cgi.escape(self.request.get('description')).strip()
+                    description = cgi.escape(self.request.get('des')).strip()
                     new_resource = model.UpdateResource(resource.key,
                                                         user, name, start_time, end_time,
                                                         tags, capacity, description)
@@ -130,6 +130,7 @@ class Tag(webapp2.RequestHandler):
             if not tag:
                 tag = model.GetTag(int(tag_id))
             resources = model.GetTagResource(tag)
+            print tag, resources
             values = {'tag': tag,
                     'resources': resources,
                     'log_url': log_url}
