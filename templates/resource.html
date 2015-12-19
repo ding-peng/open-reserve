@@ -13,6 +13,8 @@
 		<div>
 		{% if resource.image %}
 		<img src="/resource/img?img_id={{ resource.key.urlsafe() }}"></img>
+		{% else %}
+		<img src="/static/nyu.jpg"></img>
 		{% endif %}
 		</div>
 		<div><p></p><a href="/resource/rss/{{ resource.key.id() }}">Get RSS</a></div>
@@ -114,10 +116,6 @@
 </div>
 
 
-
-
-
-
 <h4>Current and Upcoming Reservations</h4>
 <table class="table table-hover">
 	<thead>
@@ -131,13 +129,18 @@
 	<tbody>
 		{% for res in reservations %}
 		<tr>
-			<td>{{ res.reserve_time }}
+			<td>{{ res.reserve_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+			<td>
+				<a href="/user/{{ res.reserver.user_id() }}">
+					{{ res.reserver }}
+				</a>
+			</td>
+			<td>
+				{{ res.start }}
 				{% if res.start < now %}
-					Now!!!
+					<span style="color:red;">Now!!!</span>
 				{% endif %}
 			</td>
-			<td>{{ res.reserver }}</td>
-			<td>{{ res.start }}</td>
 			<td>{{ res.end }}</td>
 		</tr>
 		{% endfor %}

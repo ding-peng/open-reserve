@@ -6,7 +6,7 @@
 
 
 {% block content %}
-
+{{ flash }}
 <div class="row">
   	<div class="col-md-9">
   		<h4>My Reservations</h4>
@@ -21,8 +21,12 @@
 			<tbody>
 				{% for res in reservations %}
 				<tr>
-					<td>{{ res.reserve_time }}</td>
-					<td>{{ res.key.parent().get().name }}</td>
+					<td>{{ res.reserve_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+					<td>
+						<a href="/resource/{{ res.key.parent().get().key.id() }}">
+							{{ res.key.parent().get().name }}
+						</a>
+					</td>
 					<td>{{ res.start }} - {{ res.end }}</td>
 					<td>
 		            	<a href="/user/del/{{ res.key.parent().get().key.id() }}/{{ res.key.id() }}" class="close" onclick="return confirm('Confirm Delete?')"><span aria-hidden="true">&times;</span></a>
@@ -66,6 +70,12 @@
 			<h4>My Resources</h4>
 			{% for res in my_resources %}
 				<a href="/resource/{{ res.key.id() }}" class="list-group-item">{{ res.name }}</a>
+			{% endfor %}
+		</div>
+		<div class="list-group">
+			<h4>Top Tags</h4>
+			{% for t in tags %}
+				<a class="list-group-item" href="/resource/tag/{{ t.tag_name }}">{{t.tag_name}}<span class="badge">{{ t.total_res }}</span></a>
 			{% endfor %}
 		</div>
   </div>

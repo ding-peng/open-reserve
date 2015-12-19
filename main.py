@@ -29,7 +29,7 @@ class MainPage(webapp2.RequestHandler):
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
             resources = model.AllResource()
-            tags = model.AllTags()
+            tags = model.TopTags()
             my_resources = model.MyResource(user)
             values = {'resources':resources,
                       'reservations': reservations,
@@ -44,6 +44,9 @@ class MainPage(webapp2.RequestHandler):
 
 
 class Resource(webapp2.RequestHandler):
+
+    def get(self):
+        self.redirect("/")
 
     def post(self):
         user = users.get_current_user()

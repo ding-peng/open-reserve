@@ -6,6 +6,8 @@
 
 {% block content %}
 
+<h3>User <i>{{ user }}</i> Information</h3>
+
 <div class="row">
   	<div class="col-md-12">
   		<h4>User Reservations</h4>
@@ -20,7 +22,7 @@
 	<tbody>
 		{% for res in reservations %}
 		<tr>
-			<td>{{ res.reserve_time }}</td>
+			<td>{{ res.reserve_time.strftime("%Y-%m-%d %H:%M:%S") }}</td>
 			<td>{{ res.key.parent().get().name }}</td>
 			<td>{{ res.start }} - {{ res.end }}</td>
 		</tr>

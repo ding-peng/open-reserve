@@ -16,7 +16,7 @@ class Resource(ndb.Model):
     start_time = ndb.DateTimeProperty()
     end_time = ndb.DateTimeProperty()
     tags = ndb.StructuredProperty(Tag, repeated=True)
-    last_res_time = ndb.DateTimeProperty(default=None)
+    last_res_time = ndb.DateTimeProperty(default=datetime.datetime.strptime("1900", "%Y"))
     description = ndb.StringProperty(default="")
     reserved_num = ndb.IntegerProperty(default=0)
     capacity = ndb.IntegerProperty(default=1)
@@ -83,6 +83,10 @@ def GetResourceReservation(resource):
 
 def AllTags():
     return Tag.query()
+
+
+def TopTags():
+    return Tag.query().order(-Tag.total_res).fetch(10)
 
 
 def GetTag(id):

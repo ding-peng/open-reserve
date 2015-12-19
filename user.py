@@ -31,7 +31,8 @@ class User(webapp2.RequestHandler):
             resources = model.AllResource()
             values = {'resources': resources,
                       'reservations': reservations,
-                      'log_url': log_url}
+                      'log_url': log_url,
+                      'user': user}
             template = JINJA_ENVIRONMENT.get_template('user.html')
             self.response.write(template.render(values))
         else:
