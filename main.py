@@ -92,7 +92,7 @@ class Cron(webapp2.RequestHandler):
                 try:
                     mail_body = ("You've reservation " + resource.name +
                                  " has started!")
-                    mail.send_mail(sende="Open Reserve <support@openreserve.com>",
+                    mail.send_mail(sender="Open Reserve <support@openreserve.com>",
                                    to='<' + res.reserver.email + '>',
                                    subject="Reservation Start",
                                    body=mail_body)
