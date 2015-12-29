@@ -28,7 +28,7 @@ class User(webapp2.RequestHandler):
         if user:
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
-            resources = model.AllResource()
+            resources = model.MyResource(user)
             values = {'resources': resources,
                       'reservations': reservations,
                       'log_url': log_url,
