@@ -3,7 +3,6 @@
 # Peng Ding @ 2015-12-18 13:01:07
 
 
-
 import os
 import urllib
 import cgi
@@ -24,7 +23,7 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 class User(webapp2.RequestHandler):
 
     def get(self, email):
-        user = users.User(email = email)
+        user = users.User(email=email)
         if user:
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)

@@ -31,7 +31,7 @@ class MainPage(webapp2.RequestHandler):
             reservations = model.AllReservations(user)
             resources = model.AllResource()
             my_resources = model.MyResource(user)
-            values = {'resources':resources,
+            values = {'resources': resources,
                       'reservations': reservations,
                       'my_resources': my_resources,
                       'log_url': log_url}
@@ -90,11 +90,12 @@ class Cron(webapp2.RequestHandler):
                 model.DelReservation(res.key.id(), res.key.parent().get())
             if res.start >= datetime.now():
                 try:
-                    mail_body = "You've reservation " + resource.name + " has started!"
-                    mail.send_mail(sender = "Open Reserve <support@openreserve.com>",
-                                    to = '<' + res.reserver.email + '>',
-                                    subject = "Reservation Start",
-                                    body = mail_body)
+                    mail_body = ("You've reservation " + resource.name +
+                                 " has started!")
+                    mail.send_mail(sende="Open Reserve <support@openreserve.com>",
+                                   to='<' + res.reserver.email + '>',
+                                   subject="Reservation Start",
+                                   body=mail_body)
                 except:
                     pass
 

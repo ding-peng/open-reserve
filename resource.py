@@ -42,7 +42,6 @@ class Resource(webapp2.RequestHandler):
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))
 
-
     def post(self, resource_id):
         user = users.get_current_user()
         if user:
@@ -64,8 +63,10 @@ class Resource(webapp2.RequestHandler):
                     capacity = int(cgi.escape(self.request.get('capacity')).strip())
                     description = cgi.escape(self.request.get('des')).strip()
                     new_resource = model.UpdateResource(resource.key,
-                                                        user, name, start_time, end_time,
-                                                        tags, capacity, description)
+                                                        user, name,
+                                                        start_time, end_time,
+                                                        tags, capacity,
+                                                        description)
                     image = self.request.get('img')
                     if image:
                         image = images.resize(image, 200, 200)
@@ -78,6 +79,7 @@ class Resource(webapp2.RequestHandler):
         else:
             log_url = users.create_login_url(self.request.uri)
             self.redirect(users.create_login_url(self.request.uri))
+
 
 class Reserve(webapp2.RequestHandler):
 
@@ -94,27 +96,39 @@ class Reserve(webapp2.RequestHandler):
                 end_time = datetime.strptime(end, "%H:%M").time()
                 start_datetime = datetime.combine(date, start_time)
                 end_datetime = datetime.combine(date, end_time)
-                if (start_time <= resource.start_time.time() and end_time >= resource.start_time.time()) or (start_time <= resource.end_time.time() and end_time >= resource.end_time.time()):
+                if ((start_time <= resource.start_time.time() and
+                     end_time >= resource.start_time.time()) or
+                    (start_time <= resource.end_time.time() and
+                     end_time >= resource.end_time.time())):
                     self.redirect("/")
                 current_res = model.GetResourceReservation(resource)
                 cur_reserve_num = 0
                 for res in current_res:
-                    if (start_datetime <= res.start and end_datetime >= res.start) or (start_datetime <= res.end and end_datetime >= res.end):
+                    if ((start_datetime <= res.start and
+                         end_datetime >= res.start) or
+                        (start_datetime <= res.end and
+                         end_datetime >= res.end)):
                         cur_reserve_num += 1
                 user_has_no_res = True
                 user_reservations = model.AllReservations(user)
                 for u_res in user_reservations:
-                    if (start_datetime <= u_res.start and end_datetime >= u_res.start) or (start <= u_res.end and end_datetime >= u_res.end):
+                    if ((start_datetime <= u_res.start and
+                         end_datetime >= u_res.start) or
+                        (start <= u_res.end and
+                         end_datetime >= u_res.end)):
                         user_has_no_res = False
-                if cur_reserve_num < resource.capacity and user_has_no_res and end_time > start_time:
-                    resveration = model.AddReservation(user, resource, start_datetime,
-                                                    end_datetime)
+                if (cur_reserve_num < resource.capacity and
+                   user_has_no_res and
+                   end_time > start_time):
+                    resveration = model.AddReservation(user, resource,
+                                                       start_datetime,
+                                                       end_datetime)
                     try:
                         mail_body = "You've reserved " + resveration.resource.name + "!"
-                        mail.send_mail(sender = "Open Reserve <support@openreserve.com>",
-                                        to = '<' + res.reserver.email + '>',
-                                        subject = "Reservation Confirmation",
-                                        body = mail_body)
+                        mail.send_mail(sender="Open Reserve <support@openreserve.com>",
+                                       to='<' + res.reserver.email + '>',
+                                       subject="Reservation Confirmation",
+                                       body=mail_body)
                     except:
                         pass
                 self.redirect("/resource/"+resource_id)
@@ -138,8 +152,8 @@ class Tag(webapp2.RequestHandler):
             resources = model.GetTagResource(tag)
             print tag, resources
             values = {'tag': tag,
-                    'resources': resources,
-                    'log_url': log_url}
+                      'resources': resources,
+                      'log_url': log_url}
             template = JINJA_ENVIRONMENT.get_template('tag.html')
             self.response.write(template.render(values))
         else:
@@ -194,20 +208,37 @@ class Rss(webapp2.RequestHandler):
             self.response.write('<channel>')
             self.response.write('<title>' + resource.name + '</title>')
             if resource.description:
-                self.response.write('<description>' + resource.description + '</description>')
+                self.response.write('<description>' +
+                                    resource.description +
+                                    '</description>')
             else:
-                self.response.write('<description>' + resource.name + '</description>')
-            self.response.write('<link>' + self.request.url.replace("/rss","") + '</link>')
-            self.response.write('<lastBuildDate>' + datetime.now().strftime("%b, %d %Y %H:%M") + '</lastBuildDate>')
-            self.response.write('<pubDate>' + datetime.now().strftime("%b, %d %Y %H:%M") + '</pubDate>')
+                self.response.write('<description>' +
+                                    resource.name +
+                                    '</description>')
+            self.response.write('<link>' +
+                                self.request.url.replace("/rss", "") +
+                                '</link>')
+            self.response.write('<lastBuildDate>' +
+                                datetime.now().strftime("%b, %d %Y %H:%M") +
+                                '</lastBuildDate>')
+            self.response.write('<pubDate>' +
+                                datetime.now().strftime("%b, %d %Y %H:%M") +
+                                '</pubDate>')
             self.response.write('<ttl>1800</ttl>')
             reservations = model.GetResourceReservation(resource)
             for res in reservations:
                 self.response.write('<item>')
-                self.response.write('<reserver>' + str(res.reserver) + '</reserver>')
-                self.response.write('<reserveDate>' + res.reserve_time.strftime("%b, %d %Y %H:%M") + '</reserveDate>')
-                self.response.write('<start>' + res.start.strftime("%b, %d %Y %H:%M") + '</start>')
-                self.response.write('<end>' + res.end.strftime("%b, %d %Y %H:%M") + '</end>')
+                self.response.write('<reserver>' + str(res.reserver) +
+                                    '</reserver>')
+                self.response.write('<reserveDate>' +
+                                    res.reserve_time.strftime("%b, %d %Y %H:%M") +
+                                    '</reserveDate>')
+                self.response.write('<start>' +
+                                    res.start.strftime("%b, %d %Y %H:%M") +
+                                    '</start>')
+                self.response.write('<end>' +
+                                    res.end.strftime("%b, %d %Y %H:%M") +
+                                    '</end>')
                 self.response.write('</item>')
             self.response.write('</channel>')
             self.response.write('</rss>')

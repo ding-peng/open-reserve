@@ -5,6 +5,7 @@
 from google.appengine.ext import ndb
 import datetime
 
+
 class Tag(ndb.Model):
     tag_name = ndb.StringProperty()
 
@@ -49,15 +50,18 @@ def GetResourceByDatetime(start, end):
         reservations = GetResourceReservation(c_res)
         cur_reserve_num = 0
         for res in reservations:
-            if (start <= res.start and end >= res.start) or (start <= res.end and end >= res.end):
+            if ((start <= res.start and end >= res.start) or
+               (start <= res.end and end >= res.end)):
                     cur_reserve_num += 1
-        if cur_reserve_num < c_res.capacity and c_res.start_time.time() < start.time() and c_res.end_time.time() > end.time():
+        if (cur_reserve_num < c_res.capacity and
+           c_res.start_time.time() < start.time() and
+           c_res.end_time.time() > end.time()):
             results.append(c_res)
     return results
 
 
 def MyResource(user):
-    return Resource.query(Resource.owner==user)
+    return Resource.query(Resource.owner == user)
 
 
 def GetResource(id):
@@ -69,7 +73,7 @@ def GetReservation(id, parent):
 
 
 def AllReservations(user):
-    return Reservation.query(Reservation.reserver==user).order(Reservation.reserve_time)
+    return Reservation.query(Reservation.reserver == user).order(Reservation.reserve_time)
 
 
 def AllUsersReservations():
@@ -89,11 +93,11 @@ def GetTag(id):
 
 
 def GetTagbyName(name):
-    return Tag.query(Tag.tag_name==name).get()
+    return Tag.query(Tag.tag_name == name).get()
 
 
 def GetTagResource(tag):
-    return Resource.query(Resource.tags==tag)
+    return Resource.query(Resource.tags == tag)
 
 
 def AddResource(user, name, start_time, end_time,
@@ -106,7 +110,10 @@ def AddResource(user, name, start_time, end_time,
 
 
 def AddReservation(user, resource, start, end):
-    reservation = Reservation(reserver=user, start=start, end=end, parent=resource.key)
+    reservation = Reservation(reserver=user,
+                              start=start,
+                              end=end,
+                              parent=resource.key)
     reservation.put()
     resource.last_res_time = datetime.datetime.now()
     resource.reserved_num += 1
@@ -115,12 +122,12 @@ def AddReservation(user, resource, start, end):
 
 
 def AddTag(name):
-    if not Tag.query(Tag.tag_name==name).get():
+    if not Tag.query(Tag.tag_name == name).get():
         tag = Tag(tag_name=name)
         tag.put()
         return tag
     else:
-        return Tag.query(Tag.tag_name==name).get()
+        return Tag.query(Tag.tag_name == name).get()
 
 
 def DelReservation(id, parent):
