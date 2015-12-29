@@ -23,8 +23,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class User(webapp2.RequestHandler):
 
-    def get(self, user_id):
-        user = users.User(_user_id = user_id)
+    def get(self, email):
+        user = users.User(email = email)
         if user:
             log_url = users.create_logout_url(self.request.uri)
             reservations = model.AllReservations(user)
@@ -57,6 +57,6 @@ class Deletion(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([
-    ('/user/(\d+)', User),
     ('/user/del/(\d+)/(\d+)', Deletion),
+    ('/user/(.+)', User),
 ], debug=True)
