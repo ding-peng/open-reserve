@@ -43,7 +43,9 @@
 		        			Click to edit.
 							</a>
 						{% else %}
-							{{ resource.owner }}
+                            <a href="/user/{{ resource.owner.email() }}">
+                                {{ resource.owner }}
+                            </a>
 						{% endif %}
 					</label>
 				</div>
